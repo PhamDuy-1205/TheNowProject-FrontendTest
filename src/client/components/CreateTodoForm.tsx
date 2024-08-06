@@ -33,7 +33,22 @@ export const CreateTodoForm = () => {
       onSuccess: () => {
         apiContext.todo.getAll.refetch()
       },
-    })
+  })
+
+  // Btn Add hay nhấn Enter đều cùng chức năng nên em gộp lại một hàm cho gọn
+  const handleCreateTodo = () => {
+    createTodo({
+      body: todoBody,
+    });
+    setTodoBody('');
+  };
+
+  const handlePressEnterBtn = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      handleCreateTodo();
+    }
+  };
 
   return (
     <form className="group flex items-center justify-between rounded-12 border border-gray-200 py-2 pr-4 focus-within:border-gray-400">
@@ -49,18 +64,15 @@ export const CreateTodoForm = () => {
         onChange={(e) => {
           setTodoBody(e.target.value)
         }}
+        onKeyDown={handlePressEnterBtn}
         className="flex-1 px-4 text-base placeholder:text-gray-400 focus:outline-none"
       />
 
       <button
         type="button"
         disabled={isCreatingTodo}
-        onClick={() => {
-          createTodo({
-            body: todoBody,
-          })
-          setTodoBody('')
-        }}
+        onClick={handleCreateTodo}
+        className='bg-gray-700 py-[10px] px-[25px] rounded-[40px] text-[white]'
       >
         Add
       </button>
